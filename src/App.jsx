@@ -1,25 +1,24 @@
-import logo from "./logo.svg";
-import "./App.css";
+import * as React from "react";
+import "./style/App.css";
+import { BrowserRouter, Route, Routes, Link } from "react-router-dom";
 
-function App() {
+//コンポーネントのimport
+import { Login } from "./components/Login";
+import { SignUp } from "./components/SignUp";
+
+//関数コンポーネントはJSXを返す関数
+
+export const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          aaaaa
-        </a>
-      </header>
+    <div>
+      <h1>hello</h1>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/login" element={<Login />} />
+        </Routes>
+        <Link to="/">Back To Top</Link>
+      </BrowserRouter>
     </div>
   );
-}
-
-export default App;
+};
