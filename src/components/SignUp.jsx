@@ -2,43 +2,43 @@ import React from "react";
 import "../style/SignUp.css";
 
 export const SignUp = () => {
-  // const handleError = async (res) => {
-  //   const resJson = await res.json();
+  const handleError = async (res) => {
+    const resJson = await res.json();
 
-  //   switch (resJson.ErrorCode) {
-  //     case 400:
-  //       alert(resJson.ErrorMessageJP);
-  //       break;
+    switch (resJson.ErrorCode) {
+      case 400:
+        alert(resJson.ErrorMessageJP);
+        break;
 
-  //     case 403:
-  //       alert(resJson.ErrorMessageJP);
-  //       break;
+      case 403:
+        alert(resJson.ErrorMessageJP);
+        break;
 
-  //     case 403:
-  //       alert(resJson.ErrorMessageJP);
-  //       break;
-  //     default:
-  //       console.log(resJson.token);
-  //       break;
-  //   }
-  // };
+      case 403:
+        alert(resJson.ErrorMessageJP);
+        break;
+      default:
+        console.log(resJson.token);
+        break;
+    }
+  };
 
-  const BASE_URL =
-    "http://localhost:3000/api-for-missions-and-railways.herokuapp.com/users";
-  const makeUser = () => {
+  const BASE_URL = "http://api-for-missions-and-railways.herokuapp.com/users";
+  const makeUser = async () => {
     //フォームの値を受け取る
     const name = document.getElementById("name").value;
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
     const json = { name: name, email: email, password: password };
-    const res = fetch(BASE_URL, {
+
+    const res = await fetch(BASE_URL, {
       method: "POST",
-      //bodyにjsonオブジェクトをJSON文字列化して指定
-      body: JSON.stringify(json),
       //headersで"content-type":"application/json"を指定
       headers: { "Content-Type": "application/json" },
+      //bodyにjsonオブジェクトをJSON文字列化して指定
+      body: JSON.stringify(json),
     });
-    console.log(res);
+    return handleError(res);
   };
 
   return (
