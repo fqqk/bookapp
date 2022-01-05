@@ -44,14 +44,27 @@ export const Login = () => {
   };
 
   return (
-    <>
-      <input type="text" placeholder="email" id="email" />
-      <input type="text" placeholder="password" id="password" />
-      <button type="submit" onClick={loginUser}>
-        ログイン
-      </button>
+    <div className="login">
+      <form className="form">
+        <input
+          id="email"
+          type="email"
+          placeholder="email"
+          className="email_box"
+        />
+        <input
+          id="password"
+          type="password"
+          placeholder="password"
+          className="email_box"
+        />
+        <button className="btn" onClick={loginUser}>
+          ログイン
+        </button>
+      </form>
+
       <h1>これはログインコンポーネントです</h1>
       <Link to="/signup">sign in</Link>
-    </>
+    </div>
   );
 };
