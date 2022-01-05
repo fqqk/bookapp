@@ -1,5 +1,6 @@
 import React from "react";
 import "../style/SignUp.css";
+import { Link } from "react-router-dom";
 
 export const SignUp = () => {
   const handleError = async (res) => {
@@ -50,6 +51,7 @@ export const SignUp = () => {
         ユーザー作成
       </button>
       <h1>これはサインアップコンポーネントです</h1>
+      <Link to="/login">ログイン</Link>
     </>
   );
 };

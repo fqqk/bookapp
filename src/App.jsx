@@ -17,7 +17,7 @@ export const App = () => {
           <Route path="/signup" element={<SignUp />} />
           <Route path="/login" element={<Login />} />
         </Routes>
-        <Link to="/">Back To Top</Link>
+        <Link to="/">Topに戻る</Link>
       </BrowserRouter>
     </div>
   );
