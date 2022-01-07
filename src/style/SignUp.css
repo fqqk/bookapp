@@ -9,16 +9,3 @@
   flex-direction: column;
   align-items: center;
 }
-
-.name_box,
-.email_box,
-.password_box {
-  width: 200px;
-  height: 30px;
-  margin-bottom: 30px;
-}
-
-.btn {
-  width: 150px;
-  height: 40px;
-}

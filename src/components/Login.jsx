@@ -1,6 +1,11 @@
 import React from "react";
 import "../style/Login.css";
 import { Link } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import Button from "@mui/material/Button";
+import Stack from "@mui/material/Stack";
+import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
 
 export const Login = () => {
   const handleError = async (res) => {
@@ -20,19 +25,25 @@ export const Login = () => {
         break;
       default:
         console.log(resJson.token);
+        alert("ログイン成功");
         break;
     }
   };
 
   const BASE_URL = "http://api-for-missions-and-railways.herokuapp.com/signin";
 
-  const loginUser = async () => {
-    //フォームの値を受け取る
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
-    //受け取った値をjsonオブジェクトに変換
-    const json = { email: email, password: password };
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset, //フォームを空にする
+  } = useForm();
 
+  const onLogin = async (data) => {
+    const json = {
+      email: data.email,
+      password: data.password,
+    };
     const res = await fetch(BASE_URL, {
       method: "POST",
       //headersで"content-type":"application/json"を指定
@@ -40,31 +51,54 @@ export const Login = () => {
       //bodyにjsonオブジェクトをJSON文字列化して指定
       body: JSON.stringify(json),
     });
+    console.log(JSON.stringify(json));
+    reset();
     return handleError(res);
   };
 
   return (
     <div className="login">
-      <form className="form">
-        <input
-          id="email"
-          type="email"
-          placeholder="email"
-          className="email_box"
-        />
-        <input
-          id="password"
-          type="password"
-          placeholder="password"
-          className="email_box"
-        />
-        <button className="btn" onClick={loginUser}>
-          ログイン
-        </button>
+      <form className="form" onSubmit={handleSubmit(onLogin)}>
+        <Box
+          component="form"
+          sx={{
+            m: 5,
+            mx: "auto",
+            width: "25ch",
+          }}
+        >
+          <TextField
+            fullWidth={true}
+            id="email"
+            label="email"
+            variant="standard"
+            type="email"
+            {...register("email", {
+              required: true,
+              pattern:
+                /^[A-Za-z0-9]{1}[A-Za-z0-9_.-]*@{1}[A-Za-z0-9_.-]{1,}.[A-Za-z0-9]{1,}$/,
+            })}
+          />
+          {errors.email && "example@gmail.comの形式で入力してください"}
+          <TextField
+            fullWidth={true}
+            id="password"
+            label="password"
+            variant="standard"
+            type="password"
+            {...register("password", { required: true, minLength: 6 })}
+          />
+          {errors.password && "パスワードは6文字以上です"}
+        </Box>
+        <Stack spacing={2} direction="row">
+          <Button type="submit" variant="contained">
+            ログイン
+          </Button>
+        </Stack>
       </form>
 
-      <h1>これはログインコンポーネントです</h1>
-      <Link to="/signup">sign in</Link>
+      <p>これはログインコンポーネントです</p>
+      <Link to="/signup">サインイン</Link>
     </div>
   );
 };

@@ -8,6 +8,7 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 
 export const SignUp = () => {
+  //APIからのレスポンスを受け取り、受け取ったステータスコードによって状況を伝える
   const handleError = async (res) => {
     const resJson = await res.json();
 
@@ -25,72 +26,51 @@ export const SignUp = () => {
         break;
       default:
         console.log(resJson.token);
+        alert("登録完了");
         break;
     }
   };
 
+  //APIのURL
   const BASE_URL = "http://api-for-missions-and-railways.herokuapp.com/users";
-  const makeUser = async () => {
-    //フォームの値を受け取る
-    // const name = document.getElementById("name").value;
-    // const email = document.getElementById("email").value;
-    // const password = document.getElementById("password").value;
-    // const json = { name: name, email: email, password: password };
-    // const res = await fetch(BASE_URL, {
-    //   method: "POST",
-    //   //headersで"content-type":"application/json"を指定
-    //   headers: { "Content-Type": "application/json" },
-    //   //bodyにjsonオブジェクトをJSON文字列化して指定
-    //   body: JSON.stringify(json),
-    // });
-    // return handleError(res);
-  };
 
+  //react hook formの
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+    reset, //フォームを空にする
+  } = useForm({
+    mode: "onSubmit", // バリデーションが実行されるタイミング
+    defaultValues: {
+      // 初回レンダリング時のフォームのデフォルト値
+      name: "",
+      email: "",
+      password: "",
+    },
+  });
 
-  const onSubmit = (data) => {
+  const SignUp = async (data) => {
     const json = {
       name: data.name,
       email: data.email,
       password: data.password,
     };
+    const res = await fetch(BASE_URL, {
+      method: "POST",
+      //headersで"content-type":"application/json"を指定
+      headers: { "Content-Type": "application/json" },
+      //bodyにjsonオブジェクトをJSON文字列化して指定
+      body: JSON.stringify(json),
+    });
+    console.log(JSON.stringify(json));
+    reset();
+    return handleError(res);
   };
 
   return (
     <div className="sign_in">
-      <form className="form" onSubmit={handleSubmit(onSubmit)}>
-        {/* <input
-          id="name"
-          type="text"
-          placeholder="name"
-          className="name_box"
-          {...register("name")}
-        />
-
-        <input
-          id="email"
-          type="email"
-          className="email_box"
-          placeholder="email"
-          {...register("email")}
-        />
-
-        <input
-          id="password"
-          type="password"
-          placeholder="password"
-          className="password_box"
-          {...register("password", { required: true, minLength: 8 })}
-        />
-
-        {errors.password && "Password in valid"}
-        <button type="submit" onClick={makeUser} className="btn">
-          ユーザー作成
-        </button> */}
+      <form className="form" onSubmit={handleSubmit(SignUp)}>
         <Box
           component="form"
           sx={{
@@ -105,27 +85,34 @@ export const SignUp = () => {
             label="name"
             variant="standard"
             type="text"
-            {...register("name")}
+            {...register("name", { required: true })}
           />
+          {errors.name && "名前が入力されていません"}
           <TextField
             fullWidth={true}
             id="email"
             label="email"
             variant="standard"
             type="email"
-            {...register("email")}
+            {...register("email", {
+              required: true,
+              pattern:
+                /^[A-Za-z0-9]{1}[A-Za-z0-9_.-]*@{1}[A-Za-z0-9_.-]{1,}.[A-Za-z0-9]{1,}$/,
+            })}
           />
+          {errors.email && "example@gmail.comの形式で入力してください"}
           <TextField
             fullWidth={true}
             id="password"
             label="password"
             variant="standard"
             type="password"
-            {...register("password")}
+            {...register("password", { required: true, minLength: 6 })}
           />
+          {errors.password && "パスワードは6文字以上です"}
         </Box>
         <Stack spacing={2} direction="row">
-          <Button type="submit" onClick={makeUser} variant="contained">
+          <Button type="submit" variant="contained">
             ユーザー作成
           </Button>
         </Stack>
